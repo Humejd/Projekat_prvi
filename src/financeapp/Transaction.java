@@ -1,3 +1,4 @@
+
 package financeapp;
 
 import org.bson.Document;
@@ -36,4 +37,4 @@ public class Transaction {
     public String getId() { return id; }
     public String getKategorija(){ return kategorija; }
     }
-
+//TRANSAKCIJE

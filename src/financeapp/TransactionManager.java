@@ -1,3 +1,4 @@
+
 package financeapp;
 
 import com.mongodb.client.MongoCollection;
@@ -81,3 +82,4 @@ public class TransactionManager {
         return ukupno;
     }
 }
+//TRANSAKKCIJSKI MENADZER

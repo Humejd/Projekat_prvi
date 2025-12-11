@@ -18,3 +18,4 @@ public class MongoDBConnection {
         return klijent.getDatabase(DB_NAME);
     }
 }
+//MONGO KONEKCIJA
