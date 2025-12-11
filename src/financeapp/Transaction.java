@@ -3,6 +3,7 @@ package financeapp;
 import org.bson.Document;
 
 public class Transaction {
+    private String id;
     private String vrsta;
     private double iznos;
     private String opis;
@@ -11,6 +12,12 @@ public class Transaction {
         this.vrsta = vrsta;
         this.iznos = iznos;
         this.opis = opis;
+    }
+    public Transaction(String vrsta, double iznos, String opis, String id) {
+        this.vrsta = vrsta;
+        this.iznos = iznos;
+        this.opis = opis;
+        this.id = id;
     }
 
     public Document toDocument() {
@@ -21,5 +28,7 @@ public class Transaction {
 
     public String getVrsta() { return vrsta; }
     public double getIznos() { return iznos; }
-    public String getOpis() { return opis; }
-}
+    public String getOpis() { return opis;}
+    public String getId() { return id; }
+    }
+

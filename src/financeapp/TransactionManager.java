@@ -19,6 +19,15 @@ public class TransactionManager {
     public void dodajTransakciju(Transaction t) {
         kolekcija.insertOne(t.toDocument());
     }
+    public void azurirajTransakciju(financeapp.Transaction t) {
+        Document filter = new Document("_id", new org.bson.types.ObjectId(t.getId()));
+
+        Document novi = new Document("Vrsta", t.getVrsta())
+                .append("Iznos", t.getIznos())
+                .append("Opis", t.getOpis());
+
+        kolekcija.updateOne(filter, new Document("$set", novi));
+    }
 
     public ArrayList<Transaction> dohvatiSveTransakcije() {
         ArrayList<Transaction> lista = new ArrayList<>();
@@ -29,7 +38,8 @@ public class TransactionManager {
             lista.add(new Transaction(
                     d.getString("Vrsta"),
                     d.getDouble("Iznos"),
-                    d.getString("Opis")
+                    d.getString("Opis"),
+                    d.getObjectId("_id").toHexString()
             ));
         }
 
