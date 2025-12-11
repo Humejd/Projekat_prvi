@@ -13,7 +13,8 @@ public class TransactionManager {
 
     public TransactionManager() {
         MongoDatabase db = MongoDBConnection.getDatabase();
-        kolekcija = db.getCollection("transakcije");
+        kolekcija = db.getCollection("transakcije"
+                );
     }
 
     public void dodajTransakciju(Transaction t) {
@@ -24,7 +25,8 @@ public class TransactionManager {
 
         Document novi = new Document("Vrsta", t.getVrsta())
                 .append("Iznos", t.getIznos())
-                .append("Opis", t.getOpis());
+                .append("Opis", t.getOpis())
+                .append("Kategorija", t.getKategorija());
 
         kolekcija.updateOne(filter, new Document("$set", novi));
     }
@@ -42,6 +44,7 @@ public class TransactionManager {
                     d.getString("Vrsta"),
                     d.getDouble("Iznos"),
                     d.getString("Opis"),
+                    d.getString("Kategorija"),
                     d.getObjectId("_id").toHexString()
             ));
         }

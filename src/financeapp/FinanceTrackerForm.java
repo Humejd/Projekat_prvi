@@ -20,6 +20,8 @@ public class FinanceTrackerForm {
     private JLabel opisPolja2;
     private JButton dugmeAzuriraj;
     private JButton dugmeBrisanje;
+    private JComboBox izborKategorija;
+
 
     private String odabraniId = null;
 
@@ -34,10 +36,11 @@ public class FinanceTrackerForm {
         tabelaTransakcija.getSelectionModel().addListSelectionListener(e -> {
             int red = tabelaTransakcija.getSelectedRow();
             if (red >= 0) {
-                odabraniId = (String) tabelaTransakcija.getValueAt(red, 3);
+                odabraniId = (String) tabelaTransakcija.getValueAt(red, 4);
                 izborVrste.setSelectedItem(tabelaTransakcija.getValueAt(red, 0));
                 poljeIznos.setText(String.valueOf(tabelaTransakcija.getValueAt(red, 1)));
                 poljeOpis.setText((String) tabelaTransakcija.getValueAt(red, 2));
+                izborKategorija.setSelectedItem(tabelaTransakcija.getValueAt(red, 3));
             }
         });
 
@@ -46,13 +49,14 @@ public class FinanceTrackerForm {
                 String vrsta = (String) izborVrste.getSelectedItem();
                 double iznos = Double.parseDouble(poljeIznos.getText());
                 String opis = poljeOpis.getText();
+                String kategorija = (String) izborKategorija.getSelectedItem();
 
                 if (opis.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Opis ne može biti prazan!");
                     return;
                 }
 
-                Transaction t = new Transaction(vrsta, iznos, opis);
+                Transaction t = new Transaction(vrsta, iznos, opis, kategorija);
                 menadzer.dodajTransakciju(t);
 
                 ucitajTabelu();
@@ -76,8 +80,9 @@ public class FinanceTrackerForm {
                 String vrsta = (String) izborVrste.getSelectedItem();
                 double iznos = Double.parseDouble(poljeIznos.getText());
                 String opis = poljeOpis.getText();
+                String kategorija = (String) izborKategorija.getSelectedItem();
 
-                Transaction t = new Transaction(vrsta, iznos, opis, odabraniId);
+                Transaction t = new Transaction(vrsta, iznos, opis, kategorija,odabraniId);
 
                 menadzer.azurirajTransakciju(t);
 
@@ -134,21 +139,24 @@ public class FinanceTrackerForm {
         model.addColumn("Vrsta");
         model.addColumn("Iznos");
         model.addColumn("Opis");
+        model.addColumn("Kategorija");
         model.addColumn("ID");
+
 
         for (Transaction t : lista) {
             model.addRow(new Object[]{
                     t.getVrsta(),
                     t.getIznos(),
                     t.getOpis(),
+                    t.getKategorija(),
                     t.getId()
             });
         }
 
         tabelaTransakcija.setModel(model);
-        tabelaTransakcija.getColumnModel().getColumn(3).setMinWidth(0);
-        tabelaTransakcija.getColumnModel().getColumn(3).setMaxWidth(0);
-        tabelaTransakcija.getColumnModel().getColumn(3).setWidth(0);
+        tabelaTransakcija.getColumnModel().getColumn(4).setMinWidth(0);
+        tabelaTransakcija.getColumnModel().getColumn(4).setMaxWidth(0);
+        tabelaTransakcija.getColumnModel().getColumn(4).setWidth(0);
     }
 
     private void azurirajPregled() {
