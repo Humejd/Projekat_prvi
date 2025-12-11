@@ -33,6 +33,15 @@ public class TransactionManager {
     public void obrisiTransakciju(String id) {
         kolekcija.deleteOne(new Document("_id", new org.bson.types.ObjectId(id)));
     }
+    public double exportujTransakciju (String kategorija) {
+        double suma = 0;
+        for (Transaction t : dohvatiSveTransakcije()) {
+            if (kategorija.equals(t.getKategorija())) {
+                suma += t.getIznos();
+            }
+        }
+        return suma;
+    }
 
     public ArrayList<Transaction> dohvatiSveTransakcije() {
         ArrayList<Transaction> lista = new ArrayList<>();

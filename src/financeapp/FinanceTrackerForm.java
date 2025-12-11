@@ -21,6 +21,7 @@ public class FinanceTrackerForm {
     private JButton dugmeAzuriraj;
     private JButton dugmeBrisanje;
     private JComboBox izborKategorija;
+    private JButton dugmeExport;
 
 
     private String odabraniId = null;
@@ -130,6 +131,49 @@ public class FinanceTrackerForm {
                 odabraniId = null;
             }
         });
+        dugmeExport.addActionListener(e -> {
+
+            try {
+
+                double prihodi = menadzer.ukupniPrihodi();
+                double rashodi = menadzer.ukupniRashodi();
+                double stanje = prihodi - rashodi;
+
+                // PO KATEGORIJAMA
+                double hrana = menadzer.exportujTransakciju("Hrana");
+                double prevoz = menadzer.exportujTransakciju("Prevoz");
+                double zabava = menadzer.exportujTransakciju("Zabava");
+                double racuni = menadzer.exportujTransakciju("Racuni");
+                double ostalo = menadzer.exportujTransakciju("Ostalo");
+
+                String tekst =
+                        "Ukupni prihod: " + prihodi + "\n" +
+                                "Ukupni rashod: " + rashodi + "\n" +
+                                "Stanje: " + stanje + "\n\n" +
+                                "Rashodi po kategorijama:\n" +
+                                "Hrana: " + hrana + "\n" +
+                                "Prevoz: " + prevoz + "\n" +
+                                "Zabava: " + zabava + "\n" +
+                                "Racuni: " + racuni + "\n" +
+                                "Ostalo: " + ostalo + "\n";
+
+                JFileChooser chooser = new JFileChooser();
+                chooser.setSelectedFile(new java.io.File("izvjestaj.txt"));
+
+                if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+
+                    java.io.File file = chooser.getSelectedFile();
+                    java.nio.file.Files.write(file.toPath(), tekst.getBytes());
+
+                    JOptionPane.showMessageDialog(null, "Uspješno eksportovano!");
+                }
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Greška pri exportu!");
+            }
+
+        });
+
     }
 
     private void ucitajTabelu() {
