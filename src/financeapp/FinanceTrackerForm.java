@@ -19,6 +19,7 @@ public class FinanceTrackerForm {
     private JLabel opisPolja;
     private JLabel opisPolja2;
     private JButton dugmeAzuriraj;
+    private JButton dugmeBrisanje;
 
     private String odabraniId = null;
 
@@ -89,6 +90,39 @@ public class FinanceTrackerForm {
 
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Greška pri ažuriranju!");
+            }
+        });
+        dugmeBrisanje.addActionListener(e -> {
+
+            if (odabraniId == null) {
+                JOptionPane.showMessageDialog(null, "Niste odabrali transakciju!");
+                return;
+            }
+
+            Object[] opcije = {"Da", "Ne"};
+
+            int odgovor = JOptionPane.showOptionDialog(
+                    null,
+                    "Jeste li sigurni da želite izbrisati ovu transakciju?",
+                    "Potvrda brisanja",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    opcije,
+                    opcije[0]
+            );
+
+
+            if (odgovor == 0) {
+
+                menadzer.obrisiTransakciju(odabraniId);
+
+                JOptionPane.showMessageDialog(null, "Transakcija obrisana!");
+
+                ucitajTabelu();
+                azurirajPregled();
+
+                odabraniId = null;
             }
         });
     }

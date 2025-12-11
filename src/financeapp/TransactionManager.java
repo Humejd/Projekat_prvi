@@ -28,6 +28,9 @@ public class TransactionManager {
 
         kolekcija.updateOne(filter, new Document("$set", novi));
     }
+    public void obrisiTransakciju(String id) {
+        kolekcija.deleteOne(new Document("_id", new org.bson.types.ObjectId(id)));
+    }
 
     public ArrayList<Transaction> dohvatiSveTransakcije() {
         ArrayList<Transaction> lista = new ArrayList<>();
