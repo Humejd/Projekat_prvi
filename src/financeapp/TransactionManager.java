@@ -5,6 +5,9 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+import java.util.Map;
+import java.util.HashMap;
+
 
 import java.util.ArrayList;
 
@@ -34,15 +37,50 @@ public class TransactionManager {
     public void obrisiTransakciju(String id) {
         kolekcija.deleteOne(new Document("_id", new org.bson.types.ObjectId(id)));
     }
-    public double exportujTransakciju (String kategorija) {
-        double suma = 0;
+    public Map<String, Double> pripremaZaExport() {
+
+        Map<String, Double> podaci = new HashMap<>();
+
+
+        podaci.put("Prihodi", 0.0);
+        podaci.put("Rashodi", 0.0);
+        podaci.put("Hrana", 0.0);
+        podaci.put("Prijevoz", 0.0);
+        podaci.put("Zabava", 0.0);
+        podaci.put("Plata", 0.0);
+        podaci.put("Racuni", 0.0);
+        podaci.put("Ostalo", 0.0);
+
         for (Transaction t : dohvatiSveTransakcije()) {
-            if (kategorija.equals(t.getKategorija())) {
-                suma += t.getIznos();
+
+            if ("Prihod".equals(t.getVrsta())) {
+                podaci.put("Prihodi", podaci.get("Prihodi") + t.getIznos());
+            } else if ("Rashod".equals(t.getVrsta())) {
+                podaci.put("Rashodi", podaci.get("Rashodi") + t.getIznos());
+            }
+
+            switch (t.getKategorija()) {
+                case "Plata":
+                case "Hrana":
+                case "Prijevoz":
+                case "Zabava":
+                case "Racuni":
+                    podaci.put(
+                            t.getKategorija(),
+                            podaci.get(t.getKategorija()) + t.getIznos()
+                    );
+                    break;
+                default:
+                    podaci.put(
+                            "Ostalo",
+                            podaci.get("Ostalo") + t.getIznos()
+                    );
             }
         }
-        return suma;
+
+        return podaci;
     }
+
 
     public ArrayList<Transaction> dohvatiSveTransakcije() {
         ArrayList<Transaction> lista = new ArrayList<>();
@@ -62,24 +100,8 @@ public class TransactionManager {
         return lista;
     }
 
-    public double ukupniPrihodi() {
-        double ukupno = 0;
-        for (Transaction t : dohvatiSveTransakcije()) {
-            if ("Prihod".equals(t.getVrsta())) {
-                ukupno += t.getIznos();
-            }
-        }
-        return ukupno;
-    }
 
-    public double ukupniRashodi() {
-        double ukupno = 0;
-        for (Transaction t : dohvatiSveTransakcije()) {
-            if ("Rashod".equals(t.getVrsta())) {
-                ukupno += t.getIznos();
-            }
-        }
-        return ukupno;
-    }
+
+
 }
 //TRANSAKKCIJSKI MENADZER

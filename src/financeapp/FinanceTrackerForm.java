@@ -4,6 +4,8 @@ package financeapp;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
+import java.util.Map;
+
 
 public class FinanceTrackerForm {
 
@@ -136,27 +138,26 @@ public class FinanceTrackerForm {
 
             try {
 
-                double prihodi = menadzer.ukupniPrihodi();
-                double rashodi = menadzer.ukupniRashodi();
-                double stanje = prihodi - rashodi;
 
-                // PO KATEGORIJAMA
-                double hrana = menadzer.exportujTransakciju("Hrana");
-                double prevoz = menadzer.exportujTransakciju("Prevoz");
-                double zabava = menadzer.exportujTransakciju("Zabava");
-                double racuni = menadzer.exportujTransakciju("Racuni");
-                double ostalo = menadzer.exportujTransakciju("Ostalo");
+                Map<String, Double> p = menadzer.pripremaZaExport();
+
+                double prihodi = p.get("Prihodi");
+                double rashodi = p.get("Rashodi");
+                double stanje = prihodi - rashodi;
 
                 String tekst =
                         "Ukupni prihod: " + prihodi + "\n" +
                                 "Ukupni rashod: " + rashodi + "\n" +
                                 "Stanje: " + stanje + "\n\n" +
                                 "Rashodi po kategorijama:\n" +
-                                "Hrana: " + hrana + "\n" +
-                                "Prevoz: " + prevoz + "\n" +
-                                "Zabava: " + zabava + "\n" +
-                                "Racuni: " + racuni + "\n" +
-                                "Ostalo: " + ostalo + "\n";
+                                "Hrana: " + p.get("Hrana") + "\n" +
+                                "Plata: " + p.get("Plata") + "\n" +
+                                "Prijevoz: " + p.get("Prijevoz") + "\n" +
+                                "Zabava: " + p.get("Zabava") + "\n" +
+                                "Racuni: " + p.get("Racuni") + "\n" +
+                                "Ostalo: " + p.get("Ostalo") + "\n";
+
+
 
                 JFileChooser chooser = new JFileChooser();
                 chooser.setSelectedFile(new java.io.File("izvjestaj.txt"));
@@ -205,14 +206,18 @@ public class FinanceTrackerForm {
     }
 
     private void azurirajPregled() {
-        double prihodi = menadzer.ukupniPrihodi();
-        double rashodi = menadzer.ukupniRashodi();
+
+        Map<String, Double> p = menadzer.pripremaZaExport();
+
+        double prihodi = p.get("Prihodi");
+        double rashodi = p.get("Rashodi");
         double saldo = prihodi - rashodi;
 
         labelaPrihodi.setText("Prihod: " + prihodi);
         labelaRashodi.setText("Rashod: " + rashodi);
         labelaSaldo.setText("Saldo: " + saldo);
     }
+
 
     public JPanel getGlavniPanel() {
         return glavniPanel;
